@@ -150,29 +150,77 @@ The boxplot shows clear separation in medians and difference in spread across th
 % ====================================
 % Methodology
 % ====================================
+\newpage
 \section{Methodology}
 
 This section should be at most 3 pages.
+\begin{itemize}
+    \item \textbf{softmax regression}
+        \begin{itemize}
+            \item \textbf{Reason:} it is highly effective for multi-class classification with high-dimensional TF-IDF text features. The model is simple, interpretable, and robust on small datasets.
+            \item \textbf{optimization techniques:}
+                \begin{itemize}
+                    \item \textbf{optimizer}: LBFGS (or SGD)
+                    \item \textbf{regularization} if applicable: L2 regularization
+                    \item \textbf{learning rate schedule(for SGD)}: step decay or exponential decay
+                    \item \textbf{early stopping strategies if applicable:} Because Softmax Regression solves a convex objective using LBFGS, early stopping is not required. The optimization converges to a global minimum. For SGD, early stopping monitored the validation loss and stopped training when no improvement was observed for 5 consecutive epochs.
+However, we monitored validation loss to ensure no overfitting occurred.
 
+                \end{itemize}
+            \item \textbf{validation method:}
+                    \begin{itemize}
+                    \item \textbf{cross-validation if applicable:} Stratified 5-fold cross-validation
+                    \item \textbf{hyperparameters:} optimizer(LBFGS or SGD), L2 regularization's$\frac{1}{\lambda}=0.1,1,10$, number of iterations(1000,1500,2000 for LBFGS, 20,30,40 epochs for SGD), learning rate(0.1,0.01,0.001) and learning rate schedule(step decay, exponential decay)(for SGD)
+                    \item \textbf{hyperparameter tuning process:}values(above), evaluation metrics: macro-F1
+
+                \end{itemize}
+        \end{itemize}
+    \item \textbf{Multi-Layer Perceptrons(MLP)}
+        \begin{itemize}
+            \item \textbf{Reason:}
+            Multi-layer perceptrons are suitable for this task because the dataset contains both:
+continuous features (emotion intensity, number of objects, number of colors),
+high-dimensional categorical/text features (room preference, feelings, soundtrack descriptions, etc., after one-hot encoding or TF-IDF),
+which together form a nonlinear feature space.
+MLPs can learn nonlinear decision boundaries that logistic regression cannot capture, especially when interactions exist across different modalities (text, categorical, and numeric features).
+Although the dataset is not large, a shallow MLP with strong regularization performs well and avoids overfitting.
+            \item \textbf{optimization techniques:}
+                \begin{itemize}
+                    \item \textbf{optimizer:} Adam
+                    \item \textbf{regularization if applicable:} L2 regularization
+                    \item \textbf{learning rate schedule:}
+Cosine decay or Step decay (epoch 10, 20 → learningrate × 0.1)
+                    \item \textbf{early stopping strategies if applicable:} Early stopping monitored the validation loss and stopped training when no improvement was observed for 5 consecutive epochs.
+                \end{itemize}
+            \item \textbf{validation method:}
+                    \begin{itemize}
+                    \item \textbf{cross-validation if applicable:} Stratified 5-fold cross-validation
+                    \item \textbf{hyperparameters:} number of hidden units(32,64,128), number of layers(1,2), learning rate(0.1,0.01), L2 regularization's$\frac{1}{\lambda}$(0.0001,0.001,0.01),\\dropout rate(0.0,0.1,0.2), number of epochs(20,30,40,60), learning rate schedule(step decay, cosine decay)
+                    \item \textbf{hyperparameter tuning process:}values(above), evaluation metrics: macro-F1
+
+                \end{itemize}
+        \end{itemize}
+
+\end{itemize}
 What you should write in this section:
 \begin{itemize}
-  \item Present the three model families you used and explain why they are appropriate for the dataset.  
-  \item Describe the optimization techniques by specifying the optimizer (e.g., SGD, Adam), learning rate schedule if applicable, and any regularization or early stopping strategies.  
-  \item Explain the validation method by describing how you split the data into training and validation sets, or how you applied cross-validation. Summarize your hyperparameter tuning process by stating which hyperparameters you varied, how you chose values to try, and the evaluation metrics you used to compare them. Provide evidence that your hyperparameter choices are reasonable, noting that an exhaustive search is not required.  
-  \item Describe the evaluation metrics by explaining which metrics you used to evaluate your models. Use at least one additional metric (precision, recall, F1, etc.) beyond accuracy, and justify your choices.  
-  \item Provide implementation details by briefly describing the libraries or frameworks you used, and any custom code you wrote.  
-  \item (Optional) Describe any additional techniques you tried, such as feature engineering, clustering, or PCA.  
+  \item Present the three model families you used and explain why they are appropriate for the dataset.
+  \item Describe the optimization techniques by specifying the optimizer (e.g., SGD, Adam), learning rate schedule if applicable, and any regularization or early stopping strategies.
+  \item Explain the validation method by describing how you split the data into training and validation sets, or how you applied cross-validation. Summarize your hyperparameter tuning process by stating which hyperparameters you varied, how you chose values to try, and the evaluation metrics you used to compare them. Provide evidence that your hyperparameter choices are reasonable, noting that an exhaustive search is not required.
+  \item Describe the evaluation metrics by explaining which metrics you used to evaluate your models. Use at least one additional metric (precision, recall, F1, etc.) beyond accuracy, and justify your choices.
+  \item Provide implementation details by briefly describing the libraries or frameworks you used, and any custom code you wrote.
+  \item (Optional) Describe any additional techniques you tried, such as feature engineering, clustering, or PCA.
 \end{itemize}
 
-Common mistakes: 
+Common mistakes:
 \begin{itemize}
-    \item Using the test set during training, feature engineering, or hyperparameter tuning. 
-    \item Tuning hyperparameters without a validation set that is separate from the training and test sets.  
-    \item Omitting important training details in the report, making results hard to reproduce.  
-    \item Jumping straight to deep networks when a simpler model might be sufficient and more interpretable.  
+    \item Using the test set during training, feature engineering, or hyperparameter tuning.
+    \item Tuning hyperparameters without a validation set that is separate from the training and test sets.
+    \item Omitting important training details in the report, making results hard to reproduce.
+    \item Jumping straight to deep networks when a simpler model might be sufficient and more interpretable.
     \item Choosing the best model based only on default hyperparameters, then tuning only that model. This is unfair because other models might improve significantly with tuning as well. \textbf{This is the most common mistake we observed while grading the reports in winter 2025.}
-    \item Presenting tables or plots without labels, units, or explanations.  
-    \item Reporting only accuracy and ignoring other evaluation metrics such as precision, recall, or F1.  
+    \item Presenting tables or plots without labels, units, or explanations.
+    \item Reporting only accuracy and ignoring other evaluation metrics such as precision, recall, or F1.
 \end{itemize}
 
 % ===========================================
