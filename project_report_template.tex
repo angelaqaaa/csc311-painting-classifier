@@ -147,6 +147,29 @@ The boxplot shows clear separation in medians and difference in spread across th
     \includegraphics[width=0.4\linewidth]{Figure2.png}
     \caption{Feeling sombre response for each painting}
 \end{figure}
+
+\subsection{Connection to Model Choices}
+
+\textbf{Why Softmax Regression is Appropriate}
+
+\begin{itemize}
+    \item Key predictive features (e.g., number of objects noticed, somber score) show clear separation in central tendency across classes.
+
+    \item The feature distributions suggest approximately monotonic differences rather than complex nonlinear interactions.
+
+    \item Therefore, a linear decision boundary may already achieve reasonable classification performance.
+\end{itemize}
+
+\textbf{Why an MLP May Further Improve Performance}
+
+\begin{itemize}
+    \item Multi-Layer Perceptrons (MLPs) can learn nonlinear decision boundaries that logistic regression cannot capture.
+
+    \item This is especially important when interactions exist across different feature modalities (textual, categorical, and numerical features), which is the case in our dataset.
+
+    \item Consequently, an MLP may improve classification performance when class boundaries are not strictly linear.
+\end{itemize}
+
 % ====================================
 % Methodology
 % ====================================
