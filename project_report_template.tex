@@ -108,32 +108,45 @@ This section should be at most 1/4 page (1 paragraph).
 % ==================================================
 % 3. Data Exploration
 % ==================================================
-\section{Data Exploration} 
 
-This section should be at most 2 pages. 
+\section{Data Exploration}
 
-Why is data exploration important in a machine learning project?
+\subsection{Dataset Overview}
+The target variable is Painting, which consists of three classes, each containing 562 observations, resulting in a perfectly balanced class distribution. The dataset includes 3 continuous features and 11 categorical features.
+
+\subsection{Issues}
 \begin{itemize}
-  \item Understand the dataset by identifying feature types (numerical, categorical, text), distributions, and class balance.  
-  \item Detect issues by finding missing values, outliers, or inconsistent entries that could harm model training.  
-  \item Inform pre-processing by deciding which transformations are needed (e.g., normalization, encoding, text vectorization).  
-  \item Guide model choice by identifying patterns (e.g., linear vs.\ nonlinear relationships) that suggest suitable algorithms.  
-  \item Generate insights by developing intuition about which features may be most predictive or relevant.  
+\item Several features contain a small number of missing values, typically between 65 and 85 per feature (approximately 4–5 \% of the dataset). 
+\item Existence of outliers. For example, an extreme value (100) is observed in the feature “How many prominent colours do you notice in this painting?”.
+\item Inconsistencies. For feature with mixed data type, some entries are numerical values while some include symbols or non-numeric texts.
 \end{itemize}
 
-What you should write in this section:
+\subsection{Pre-processing}
 \begin{itemize}
-  \item Summarize the dataset by describing the main feature types, distributions, and class balance.  
-  \item Identify issues you found such as missing values, outliers, or inconsistencies.  
-  \item Describe pre-processing by explaining what transformations you applied and why.  
-  \item Explain data splitting by describing how you reserved a portion of the data as a test set. This test set should \textbf{not} be used during data exploration.  
-  \item Use figures when helpful by including plots or tables and explaining what they reveal.  
-  \item Connect findings to model choices by highlighting patterns that influenced your selection of models.  
-  \item Share key insights by presenting observations about especially relevant or predictive features.  
+\item Missing value imputation. Continuous features are imputed using the median to reduce sensitivity to skewness and outliers, while categorical features are imputed using the most frequent response. 
+\item Normalization. Continuous features are normalized to zero mean and unit variance to prevent large-range data from dominating distance calculations.
+\item Type consistency. The feature “How much (in Canadian dollars) would you be willing to pay for this painting?” is cleaned by removing currency symbols and non-numeric texts, then converting all entries to numerical value to ensure consistent data types and proper numerical processing.
+\item TF-IDF Vectorization. Text features such as “Describe how this painting makes you feel.” are transformed using TF-IDF. This converts textual responses into numerical feature vectors that reflect the importance of words within each response relative to the dataset. This transformation allows text data to be used in machine learning models while reducing the impact of common, non-informative words.
 \end{itemize}
 
-Note: Each student contributes three data points (one per class). These three points are closely related, so if they are split across training, validation, and test sets, information from one could leak into another set. To avoid this data leakage, all three points from the same student must remain together in the same split.
+\subsection{Data splitting}
+The dataset is divided into training, validation, and test sets. Specifically, 70\% of the data is allocated to the training set, 10\% to the validation set, and 20\% to the test set. All pre-processing transformations are fitted using only the training data points and subsequently applied to the validation and test sets. Since each student contributes three related observations, group-based splitting is applied to ensure that all responses from the same student remain in the same dataset partition, preventing cross-set data leakage.
 
+\subsection{Key insights about predictive features}
+“How many objects caught your eye in the painting?” is a continuous feature.
+The boxplot shows clear separation in medians and difference in spread across the three classes, with one class exhibiting higher central tendency and another concentrated at lower values.
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=0.5\linewidth]{Figure1.png}
+    \caption{Number of objects noticed in each painting}
+\end{figure}
+
+“This art piece makes me feel sombre” is an ordinal categorical feature measured on a 5-point Likert scale (1 = Strongly disagree, 5 = Strongly agree). The stacked bar chart shows distinct response distributions across the three classes.
+\begin{figure} [h]
+    \centering
+    \includegraphics[width=0.4\linewidth]{Figure2.png}
+    \caption{Feeling sombre response for each painting}
+\end{figure}
 % ====================================
 % Methodology
 % ====================================
